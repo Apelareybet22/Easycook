@@ -15,12 +15,17 @@ export default function Formulario() {
     preferencias: "",
     cantidadPersonas: "",
     presupuesto: "",
+    restricciones: "",
   })
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log("Datos del formulario:", formData)
-    // Aquí puedes agregar la lógica para enviar los datos
+    {
+      e.preventDefault();
+      // Guardar los datos en el localStorage
+      localStorage.setItem("formData", JSON.stringify(formData));
+      console.log("Datos guardados en Local Storage:", formData);
+    };
+    
   }
 
   return (
@@ -61,6 +66,17 @@ export default function Formulario() {
                 <SelectItem value="Keto">Keto</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="restricciones">Restricciones Alimenticias</Label>
+            <Input
+              id="restricciones"
+              type="string"
+              placeholder="Ingresa tu restriccion alimenticia"
+              value={formData.restricciones}
+              onChange={(e) => setFormData({ ...formData, restricciones: e.target.value })}
+            />
           </div>
 
           <div className="space-y-2">
