@@ -2,6 +2,18 @@
 
 import type React from "react"
 
+import MenuTable from "@/components/ui/menutable"
+
+/*
+export default function ResultadoMenu({ resultado }: { resultado: string }) {
+  return (
+    <div className="container mx-auto">
+      <h1 className="text-xl font-bold mb-4">Menú generado</h1>
+      <MenuTable htmlTable={resultado} />
+    </div>
+  )
+} */
+
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -45,9 +57,10 @@ export default function Formulario() {
     preferencias: "",
     cantidadPersonas: "",
     presupuesto: "",
-  })
+  })  
 
   const [menuItems, setMenuItems] = useState<MenuItem[]>([])
+  const [menuGeneradoHtml, setMenuGeneradoHtml] = useState("")
   const [menuLoading, setMenuLoading] = useState(false)
   const [menuError, setMenuError] = useState("")
 
@@ -171,6 +184,37 @@ export default function Formulario() {
     }
   }
 
+  //added
+  const handleGenerarMenu = async () => {
+    setMenuLoading(true)
+    setMenuError("")
+    setMenuGeneradoHtml("")
+  
+    try {
+      const response = await fetch("/api/menu", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      })
+  
+      const data = await response.json()
+  
+      if (data.success) {
+        setMenuGeneradoHtml(data.menu)
+      } else {
+        setMenuError(data.message || "No se pudo generar el menú")
+      }
+    } catch (err) {
+      console.error("Error al generar menú:", err)
+      setMenuError("Error de conexión con el servidor")
+    } finally {
+      setMenuLoading(false)
+    }
+  }
+  
+
   // Función para cerrar el diálogo de confirmación
   const handleCloseConfirmation = () => {
     setShowConfirmation(false)
@@ -224,10 +268,10 @@ export default function Formulario() {
                       <SelectValue placeholder="Selecciona el tiempo" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="manana">Mañana</SelectItem>
-                      <SelectItem value="tarde">Tarde</SelectItem>
-                      <SelectItem value="noche">Noche</SelectItem>
-                      <SelectItem value="todo-el-dia">Todo el día</SelectItem>
+                      <SelectItem value="manana">Diario</SelectItem>
+                      <SelectItem value="tarde">Semanal</SelectItem>
+                      <SelectItem value="noche">Quincenal</SelectItem>
+                      <SelectItem value="todo-el-dia">Mensual</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -242,10 +286,10 @@ export default function Formulario() {
                       <SelectValue placeholder="Selecciona tus preferencias" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="interior">Interior</SelectItem>
-                      <SelectItem value="exterior">Exterior</SelectItem>
-                      <SelectItem value="terraza">Terraza</SelectItem>
-                      <SelectItem value="privado">Espacio privado</SelectItem>
+                      <SelectItem value="interior">Vegano</SelectItem>
+                      <SelectItem value="exterior">Vegetariano</SelectItem>
+                      <SelectItem value="terraza">Keto</SelectItem>
+                      <SelectItem value="privado">Normal</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -272,19 +316,43 @@ export default function Formulario() {
                   />
                 </div>
               </CardContent>
-              <CardFooter>
-                <Button type="submit" className="w-full" disabled={reservaState.loading}>
-                  {reservaState.loading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Procesando...
-                    </>
-                  ) : (
-                    "Enviar Reserva"
-                  )}
-                </Button>
-              </CardFooter>
+
+              <CardFooter className="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
+  <Button type="submit" className="w-full sm:w-auto" disabled={reservaState.loading}>
+    {reservaState.loading ? (
+      <>
+        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        Procesando...
+      </>
+    ) : (
+      "Enviar Reserva"
+    )}
+  </Button>
+
+  <Button
+    type="button"
+    variant="outline"
+    className="w-full sm:w-auto"
+    onClick={handleGenerarMenu}
+    disabled={menuLoading}
+  >
+    {menuLoading ? (
+      <>
+        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        Generando menú...
+      </>
+    ) : (
+      "Generar Menú Personalizado"
+    )}
+  </Button>
+</CardFooter>             
             </form>
+            {menuGeneradoHtml && (
+  <div className="mt-6 border rounded-md p-4 bg-background">
+    <h2 className="text-lg font-semibold mb-2">Menú personalizado generado:</h2>
+    <MenuTable htmlTable={menuGeneradoHtml} />
+  </div>
+)}
           </Card>
         </TabsContent>
 
@@ -331,6 +399,30 @@ export default function Formulario() {
                   ))}
                 </div>
               )}
+              <div className="mt-6 space-y-4">
+  <Button onClick={handleGenerarMenu} disabled={menuLoading}>
+    {menuLoading ? (
+      <>
+        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        Generando menú personalizado...
+      </>
+    ) : (
+      "Generar menú saludable personalizado"
+    )}
+  </Button>
+
+  {menuError && (
+    <p className="text-red-500 text-sm">{menuError}</p>
+  )}
+
+  {menuGeneradoHtml && (
+    <div className="mt-6 border rounded-md p-4 bg-background">
+      <h2 className="text-lg font-semibold mb-2">Menú personalizado generado por IA:</h2>
+      <MenuTable htmlTable={menuGeneradoHtml} />
+    </div>
+  )}
+</div>
+
             </CardContent>
             <CardFooter>
               <Button variant="outline" className="w-full" onClick={fetchMenu} disabled={menuLoading}>
@@ -403,7 +495,8 @@ export default function Formulario() {
       </Dialog>
     </div>
   )
+
+  
+  
 }
-
-
 
