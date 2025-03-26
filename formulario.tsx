@@ -49,6 +49,7 @@ interface ReservaState {
   success: boolean
   error: string
   reservaId: string | null
+  presupuesto: string
 }
 
 export default function Formulario() {
@@ -57,7 +58,9 @@ export default function Formulario() {
     preferencias: "",
     restriccionesAlimenticias: "",
     cantidadPersonas: "",
-    //presupuesto: "",
+    cantidadAdultos: "",
+    cantidadNinos: "",
+    presupuesto: "",
   })  
 
   const [menuItems, setMenuItems] = useState<MenuItem[]>([])
@@ -71,6 +74,7 @@ export default function Formulario() {
     success: false,
     error: "",
     reservaId: null,
+    presupuesto: "",
   })
 
   // Estado para el diálogo de confirmación
@@ -136,6 +140,7 @@ export default function Formulario() {
       success: false,
       error: "",
       reservaId: null,
+      presupuesto: reservaState.presupuesto, // Preserve the current presupuesto value
     })
 
     try {
@@ -156,17 +161,20 @@ export default function Formulario() {
           success: true,
           error: "",
           reservaId: data.reservaId,
+          presupuesto: reservaState.presupuesto, // Preserve the current presupuesto value
         })
         setShowConfirmation(true)
 
         // Limpiar el formulario después de una reserva exitosa
         setFormData({
-          tiempo: "",
-          preferencias: "",
-          restriccionesAlimenticias: "",
-          cantidadPersonas: "",
-          //presupuesto: "",
-        })
+                  tiempo: "",
+                  preferencias: "",
+                  restriccionesAlimenticias: "",
+                  cantidadPersonas: "",
+                  cantidadAdultos: "",
+                  cantidadNinos: "",
+                  presupuesto: "",
+                })
       } else {
         // Error en la reserva
         setReservaState({
@@ -174,6 +182,7 @@ export default function Formulario() {
           success: false,
           error: data.message || "Error al procesar la reserva",
           reservaId: null,
+          presupuesto: reservaState.presupuesto, // Preserve the current presupuesto value
         })
       }
     } catch (err) {
@@ -183,6 +192,7 @@ export default function Formulario() {
         success: false,
         error: "Error de conexión al servidor",
         reservaId: null,
+        presupuesto: reservaState.presupuesto, // Preserve the current presupuesto value
       })
     }
   }
@@ -219,6 +229,12 @@ export default function Formulario() {
   // Función para cerrar el diálogo de confirmación
   const handleCloseConfirmation = () => {
     setShowConfirmation(false)
+  }
+
+  // Función para manejar el armado del carrito de compra
+  const handleArmarCarrito = () => {
+    console.log("Carrito de compra armado con los datos:", formData)
+    // Aquí puedes agregar la lógica para armar el carrito de compra
   }
 
   // Agrupar los elementos del menú por categoría
@@ -330,6 +346,51 @@ export default function Formulario() {
   <div className="mt-6 border rounded-md p-4 bg-background">
     <h2 className="text-lg font-semibold mb-2">Menú personalizado generado:</h2>
     <MenuTable htmlTable={menuGeneradoHtml} />
+
+    {/* Nuevos campos para cantidad de personas y presupuesto */}
+    <div className="mt-6 space-y-4">
+      <div className="space-y-2">
+        <Label htmlFor="cantidadAdultos">Cantidad de adultos</Label>
+        <Input
+          id="cantidadAdultos"
+          type="number"
+          placeholder="Ingresa la cantidad de adultos"
+          value={formData.cantidadAdultos || ""}
+          onChange={(e) => setFormData({ ...formData, cantidadAdultos: e.target.value })}
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="cantidadNinos">Cantidad de niños</Label>
+        <Input
+          id="cantidadNinos"
+          type="number"
+          placeholder="Ingresa la cantidad de niños"
+          value={formData.cantidadNinos || ""}
+          onChange={(e) => setFormData({ ...formData, cantidadNinos: e.target.value })}
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="presupuesto">Presupuesto</Label>
+        <Input
+          id="presupuesto"
+          type="number"
+          placeholder="Ingresa tu presupuesto"
+          value={formData.presupuesto || ""}
+          onChange={(e) => setFormData({ ...formData, presupuesto: e.target.value })}
+        />
+      </div>
+    </div>
+
+    {/* Botón para armar carrito de compra */}
+    <div className="mt-4">
+      <Button
+        type="button"
+        className="w-full sm:w-auto"
+        onClick={handleArmarCarrito}
+      >
+        Armar carrito de compra
+      </Button>
+    </div>
   </div>
 )}
           </Card>
