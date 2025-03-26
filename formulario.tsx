@@ -318,16 +318,6 @@ export default function Formulario() {
               </CardContent>
 
               <CardFooter className="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
-  <Button type="submit" className="w-full sm:w-auto" disabled={reservaState.loading}>
-    {reservaState.loading ? (
-      <>
-        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-        Procesando...
-      </>
-    ) : (
-      "Enviar Reserva"
-    )}
-  </Button>
 
   <Button
     type="button"
