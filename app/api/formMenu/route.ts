@@ -9,20 +9,20 @@ export async function POST(request: Request) {
     const formData = await request.json()
 
     // Validar que todos los campos requeridos estén presentes
-    if (!formData.tiempo || !formData.preferencias || !formData.cantidadPersonas || !formData.restriccionesAlimenticias) {
+    if (!formData.tiempo || !formData.preferencias || /*!formData.cantidadPersonas ||*/ !formData.restriccionesAlimenticias) {
       return NextResponse.json({ success: false, message: "Todos los campos son requeridos" }, { status: 400 })
     }
 
     // Validar que la cantidad de personas y el presupuesto sean números válidos
-    const cantidadPersonas = Number(formData.cantidadPersonas)
+    //const cantidadPersonas = Number(formData.cantidadPersonas)
     //const presupuesto = Number(formData.presupuesto)
 
-    if (isNaN(cantidadPersonas) || cantidadPersonas <= 0) {
+    /*if (isNaN(cantidadPersonas) || cantidadPersonas <= 0) {
       return NextResponse.json(
         { success: false, message: "La cantidad de personas debe ser un número positivo" },
         { status: 400 },
       )
-    }
+    }*/
 /*
     if (isNaN(presupuesto) || presupuesto <= 0) {
       return NextResponse.json(
@@ -52,7 +52,6 @@ export async function POST(request: Request) {
     //integración con OpenIA - Prompt
     const prompt = `Crea un menú saludable y equilibrado basado en los siguientes datos:
 Preferencias: ${formData.preferencias}
-Cantidad de personas: ${formData.cantidadPersonas}
 Restricciones Alimenticias: ${formData.restriccionesAlimenticias}
 Frecuencia de consumo: ${formData.tiempo}
 

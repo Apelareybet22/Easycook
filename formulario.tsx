@@ -294,17 +294,6 @@ export default function Formulario() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="cantidadPersonas">Cantidad de personas</Label>
-                  <Input
-                    id="cantidadPersonas"
-                    type="number"
-                    placeholder="Ingresa el número de personas"
-                    value={formData.cantidadPersonas}
-                    onChange={(e) => setFormData({ ...formData, cantidadPersonas: e.target.value })}
-                  />
-                </div>
-
-                <div className="space-y-2">
                   <Label htmlFor="restriccionesAlimenticias">Restricciones Alimenticias</Label>
                   <Input
                     id="restriccionesAlimenticias"
@@ -469,9 +458,6 @@ export default function Formulario() {
                       : formData.preferencias === "normal"
                         ? "Normal"
                         : ""}
-              </p>
-              <p>
-                <strong>Personas:</strong> {formData.cantidadPersonas}
               </p>
               <p>
                 <strong>RestriccionesAlimenticias:</strong> ${formData.restriccionesAlimenticias}
