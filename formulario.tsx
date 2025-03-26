@@ -55,8 +55,9 @@ export default function Formulario() {
   const [formData, setFormData] = useState({
     tiempo: "",
     preferencias: "",
+    restriccionesAlimenticias: "",
     cantidadPersonas: "",
-    presupuesto: "",
+    //presupuesto: "",
   })  
 
   const [menuItems, setMenuItems] = useState<MenuItem[]>([])
@@ -106,10 +107,11 @@ export default function Formulario() {
   const validateForm = () => {
     if (!formData.tiempo) return "Por favor selecciona un tiempo"
     if (!formData.preferencias) return "Por favor selecciona tus preferencias"
+    if (!formData.restriccionesAlimenticias) return "Por favor ingresa tus restricciones alimenticias"
     if (!formData.cantidadPersonas) return "Por favor ingresa la cantidad de personas"
     if (Number(formData.cantidadPersonas) <= 0) return "La cantidad de personas debe ser mayor a 0"
-    if (!formData.presupuesto) return "Por favor ingresa tu presupuesto"
-    if (Number(formData.presupuesto) <= 0) return "El presupuesto debe ser mayor a 0"
+   // if (!formData.presupuesto) return "Por favor ingresa tu presupuesto"
+   // if (Number(formData.presupuesto) <= 0) return "El presupuesto debe ser mayor a 0"
     return null
   }
 
@@ -161,8 +163,9 @@ export default function Formulario() {
         setFormData({
           tiempo: "",
           preferencias: "",
+          restriccionesAlimenticias: "",
           cantidadPersonas: "",
-          presupuesto: "",
+          //presupuesto: "",
         })
       } else {
         // Error en la reserva
@@ -184,7 +187,6 @@ export default function Formulario() {
     }
   }
 
-  //added
   const handleGenerarMenu = async () => {
     setMenuLoading(true)
     setMenuError("")
@@ -214,7 +216,6 @@ export default function Formulario() {
     }
   }
   
-
   // Función para cerrar el diálogo de confirmación
   const handleCloseConfirmation = () => {
     setShowConfirmation(false)
@@ -239,14 +240,13 @@ export default function Formulario() {
     <div className="w-full max-w-4xl mx-auto">
       <Tabs defaultValue="formulario" className="w-full">
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="formulario">Formulario de Reserva</TabsTrigger>
-          <TabsTrigger value="menu">Menú</TabsTrigger>
+          <TabsTrigger value="formulario">EasyCook</TabsTrigger>
         </TabsList>
 
         <TabsContent value="formulario">
           <Card>
             <CardHeader>
-              <CardTitle className="text-2xl">Formulario de Reserva</CardTitle>
+              <CardTitle className="text-2xl">EasyCook</CardTitle>
             </CardHeader>
             <form onSubmit={handleSubmit}>
               <CardContent className="space-y-4">
@@ -268,10 +268,9 @@ export default function Formulario() {
                       <SelectValue placeholder="Selecciona el tiempo" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="manana">Diario</SelectItem>
-                      <SelectItem value="tarde">Semanal</SelectItem>
-                      <SelectItem value="noche">Quincenal</SelectItem>
-                      <SelectItem value="todo-el-dia">Mensual</SelectItem>
+                      <SelectItem value="semanal">Semanal</SelectItem>
+                      <SelectItem value="quincenal">Quincenal</SelectItem>
+                      <SelectItem value="mensual">Mensual</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -286,10 +285,10 @@ export default function Formulario() {
                       <SelectValue placeholder="Selecciona tus preferencias" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="interior">Vegano</SelectItem>
-                      <SelectItem value="exterior">Vegetariano</SelectItem>
-                      <SelectItem value="terraza">Keto</SelectItem>
-                      <SelectItem value="privado">Normal</SelectItem>
+                      <SelectItem value="vegano">Vegano</SelectItem>
+                      <SelectItem value="vegetariano">Vegetariano</SelectItem>
+                      <SelectItem value="keto">Keto</SelectItem>
+                      <SelectItem value="normal">Normal</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -306,15 +305,16 @@ export default function Formulario() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="presupuesto">Presupuesto</Label>
+                  <Label htmlFor="restriccionesAlimenticias">Restricciones Alimenticias</Label>
                   <Input
-                    id="presupuesto"
-                    type="number"
-                    placeholder="Ingresa tu presupuesto"
-                    value={formData.presupuesto}
-                    onChange={(e) => setFormData({ ...formData, presupuesto: e.target.value })}
+                    id="restriccionesAlimenticias"
+                    type="string"
+                    placeholder="Ingresa tus restricciones alimenticias"
+                    value={formData.restriccionesAlimenticias}
+                    onChange={(e) => setFormData({ ...formData, restriccionesAlimenticias: e.target.value })}
                   />
                 </div>
+                
               </CardContent>
 
               <CardFooter className="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
@@ -458,34 +458,34 @@ export default function Formulario() {
               </p>
               <p>
                 <strong>Tiempo:</strong>{" "}
-                {formData.tiempo === "manana"
-                  ? "Mañana"
-                  : formData.tiempo === "tarde"
-                    ? "Tarde"
-                    : formData.tiempo === "noche"
-                      ? "Noche"
-                      : formData.tiempo === "todo-el-dia"
-                        ? "Todo el día"
+                {formData.tiempo === "semanal"
+                  ? "Semanal"
+                  : formData.tiempo === "quincenal"
+                    ? "Quincenal"
+                    : formData.tiempo === "mensual"
+                      ? "Mensual"
+                      //: formData.tiempo === "todo-el-dia"
+                        //? "Todo el día"
                         : ""}
               </p>
               <p>
                 <strong>Preferencias:</strong>{" "}
-                {formData.preferencias === "interior"
-                  ? "Interior"
-                  : formData.preferencias === "exterior"
-                    ? "Exterior"
-                    : formData.preferencias === "terraza"
-                      ? "Terraza"
-                      : formData.preferencias === "privado"
-                        ? "Espacio privado"
+                {formData.preferencias === "vegano"
+                  ? "Vegano"
+                  : formData.preferencias === "vegetariano"
+                    ? "Vegetariano"
+                    : formData.preferencias === "keto"
+                      ? "Keto"
+                      : formData.preferencias === "normal"
+                        ? "Normal"
                         : ""}
               </p>
               <p>
                 <strong>Personas:</strong> {formData.cantidadPersonas}
               </p>
               <p>
-                <strong>Presupuesto:</strong> ${formData.presupuesto}
-              </p>
+                <strong>RestriccionesAlimenticias:</strong> ${formData.restriccionesAlimenticias}
+              </p>              
             </div>
           </div>
           <DialogFooter>

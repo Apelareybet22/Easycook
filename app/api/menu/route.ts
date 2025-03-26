@@ -56,12 +56,12 @@ export async function POST(request: Request) {
   try {
     const formData = await request.json()
 
-    if (!formData.tiempo || !formData.preferencias || !formData.cantidadPersonas || !formData.presupuesto) {
+    if (!formData.tiempo || !formData.preferencias || !formData.cantidadPersonas || !formData.restriccionesAlimenticias) {
       return NextResponse.json({ success: false, message: "Todos los campos son requeridos" }, { status: 400 })
     }
 
     const cantidadPersonas = Number(formData.cantidadPersonas)
-    const presupuesto = Number(formData.presupuesto)
+    //const presupuesto = Number(formData.presupuesto)
 
     if (isNaN(cantidadPersonas) || cantidadPersonas <= 0) {
       return NextResponse.json(
@@ -70,18 +70,19 @@ export async function POST(request: Request) {
       )
     }
 
+    /*
     if (isNaN(presupuesto) || presupuesto <= 0) {
       return NextResponse.json(
         { success: false, message: "El presupuesto debe ser un número positivo" },
         { status: 400 }
       )
-    }
+    } */
 
     const prompt = `Crea un menú saludable y equilibrado basado en los siguientes datos:
 Preferencias: ${formData.preferencias}
 Cantidad de personas: ${formData.cantidadPersonas}
+Restricciones Alimenticias: ${formData.restriccionesAlimenticias}
 Frecuencia de consumo: ${formData.tiempo}
-Presupuesto: ${formData.presupuesto}
 
 Organiza el menú por día e incluye las siguientes comidas: Desayuno, Almuerzo, Merienda y Cena. Presenta la respuesta únicamente en una tabla HTML bien estructurada, sin ningún texto adicional. Es importante que utilices ingredientes de temporada o de fácil acceso y que las recetas sean de preparación sencilla, evitando técnicas o procesos muy elaborados. El menú debe cumplir con los requerimientos nutricionales establecidos, tanto en términos de macronutrientes como de micronutrientes.`
 
