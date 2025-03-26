@@ -56,19 +56,19 @@ export async function POST(request: Request) {
   try {
     const formData = await request.json()
 
-    if (!formData.tiempo || !formData.preferencias || !formData.cantidadPersonas || !formData.restriccionesAlimenticias) {
+    if (!formData.tiempo || !formData.preferencias || /*!formData.cantidadPersonas*/ !formData.restriccionesAlimenticias) {
       return NextResponse.json({ success: false, message: "Todos los campos son requeridos" }, { status: 400 })
     }
 
-    const cantidadPersonas = Number(formData.cantidadPersonas)
+    //const cantidadPersonas = Number(formData.cantidadPersonas)
     //const presupuesto = Number(formData.presupuesto)
 
-    if (isNaN(cantidadPersonas) || cantidadPersonas <= 0) {
+    /*if (isNaN(cantidadPersonas) || cantidadPersonas <= 0) {
       return NextResponse.json(
         { success: false, message: "La cantidad de personas debe ser un número positivo" },
         { status: 400 }
       )
-    }
+    }*/
 
     /*
     if (isNaN(presupuesto) || presupuesto <= 0) {
